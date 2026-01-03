@@ -1,0 +1,70 @@
+# Token Vault Upgradeable - Submission Configuration
+
+project_name: token-vault-upgradeable
+version: 1.0.0
+author: Manikanta Oruganti
+description: Production-grade upgradeable smart contract system with UUPS proxy pattern
+
+contracts:
+  - name: TokenVaultV1
+    version: V1
+    description: Basic deposit/withdrawal functionality with deposit fees
+    functions_implemented:
+      - initialize(address _token, address _admin, uint256 _depositFee)
+      - deposit(uint256 amount)
+      - withdraw(uint256 amount)
+      - balanceOf(address user)
+      - totalDeposits()
+      - getDepositFee()
+      - getImplementationVersion()
+  
+  - name: TokenVaultV2
+    version: V2
+    description: V1 + Yield generation and pause controls
+    functions_implemented:
+      - All V1 functions preserved
+      - setYieldRate(uint256 _yieldRate)
+      - getYieldRate()
+      - claimYield()
+      - getUserYield(address user)
+      - pauseDeposits()
+      - unpauseDeposits()
+      - isDepositsPaused()
+  
+  - name: TokenVaultV3
+    version: V3
+    description: V2 + Withdrawal delay and emergency mechanisms
+    functions_implemented:
+      - All V2 functions preserved
+      - setWithdrawalDelay(uint256 _delaySeconds)
+      - getWithdrawalDelay()
+      - requestWithdrawal(uint256 amount)
+      - executeWithdrawal()
+      - emergencyWithdraw()
+      - getWithdrawalRequest(address user)
+
+testing:
+  framework: Hardhat
+  test_files:
+    - TokenVaultV1.test.js
+    - upgrade-v1-to-v2.test.js
+    - upgrade-v2-to-v3.test.js
+    - security.test.js
+
+deployment:
+  network: hardhat
+  proxy_pattern: UUPS
+  upgrades:
+    - v1-to-v2: Uses reinitializer(2)
+    - v2-to-v3: Uses reinitializer(3)
+
+features:
+  - UUPS Proxy Pattern for upgradeable contracts
+  - Role-Based Access Control (DEFAULT_ADMIN_ROLE, UPGRADER_ROLE, PAUSER_ROLE)
+  - Storage Layout Management with gaps
+  - Secure Initialization with initializer modifiers
+  - Fee Calculation (Basis Points)
+  - Yield Generation (Annual Rate)
+  - Withdrawal Delay Mechanism
+  - Emergency Withdrawal Function
+  - State Preservation Across Upgrades
