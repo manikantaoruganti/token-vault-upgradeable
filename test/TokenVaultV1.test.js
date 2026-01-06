@@ -6,7 +6,6 @@ describe("TokenVaultV1", function () {
   let token;
   let owner;
   let user1;
-
   beforeEach(async function () {
     [owner, user1] = await ethers.getSigners();
 
